@@ -1,5 +1,11 @@
 import express from 'express';
 import cors from 'cors';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const clientDist = path.join(__dirname, '../client/dist');
 
 const app = express();
 const PORT = process.env.PORT || 5005;
@@ -127,6 +133,14 @@ app.get('/api/stats', (req, res) => {
     totalRevenue,
     activeNiches: 5
   });
+});
+
+// Serve static client production build
+app.use(express.static(clientDist));
+
+// Catch-all route to serve React index.html for SPA client-side routing
+app.get('*', (req, res) => {
+  res.sendFile(path.join(clientDist, 'index.html'));
 });
 
 app.listen(PORT, () => {
