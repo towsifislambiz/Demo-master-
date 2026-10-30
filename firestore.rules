@@ -1,0 +1,43 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // ==========================================
+    // WebCraft BD - Multi-Niche Master Demo Platform
+    // Firebase Security Rules for fir-master-d8dd6
+    // ==========================================
+    
+    // 1. Orders Collection:
+    // Clients and customers can submit real-time orders from the Storefront checkout.
+    // The Live Admin Panel listens to orders in real-time.
+    match /orders/{orderId} {
+      allow read: if true;
+      allow create: if request.resource.data.customerName is string
+                    && request.resource.data.phone is string
+                    && request.resource.data.address is string
+                    && request.resource.data.total is number;
+      allow update: if request.resource.data.status in ['Pending', 'Confirmed', 'Processing', 'Delivered', 'Cancelled'];
+      allow delete: if true;
+    }
+
+    // 2. Custom Products Collection:
+    // Allows instant real-time creation and deletion of products from the Live Admin Panel.
+    match /products/{productId} {
+      allow read: if true;
+      allow write: if request.resource.data.title is string
+                   && request.resource.data.price is number
+                   && request.resource.data.category in ['clothing', 'beauty', 'gadgets', 'organic', 'footwear'];
+    }
+
+    // 3. Category Store Settings & Analytics
+    match /stores/{storeId} {
+      allow read: if true;
+      allow write: if true;
+    }
+
+    // Default Fallback: Block all other unauthorized collections
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
