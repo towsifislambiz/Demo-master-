@@ -13,10 +13,15 @@ export default function ShelaiHeader({
   showCategories = true
 }) {
   const navigate = useNavigate();
-  const { cart, wishlist = [], setIsCartOpen, cartSubtotal, brandingSettings = {}, contactSettings = {} } = useStore();
+  const { cart, wishlist = [], setIsCartOpen, cartSubtotal, brandingSettings = {}, contactSettings = {}, getNicheCart, getNicheWishlist, getProductNiche } = useStore();
 
-  const totalCartCount = cart.reduce((sum, item) => sum + item.quantity, 0);
-  const wishlistCount = wishlist.length;
+  const clothingItems = (getNicheCart ? getNicheCart('clothing') : (Array.isArray(cart) ? cart : []))
+    .filter((item) => (getProductNiche ? getProductNiche(item) : (item.id || '').startsWith('sh-')) === 'clothing');
+  const clothingWishlist = (getNicheWishlist ? getNicheWishlist('clothing') : (Array.isArray(wishlist) ? wishlist : []))
+    .filter((item) => (getProductNiche ? getProductNiche(item) : (item.id || '').startsWith('sh-')) === 'clothing');
+
+  const totalCartCount = clothingItems.reduce((sum, item) => sum + (item.quantity || 1), 0);
+  const wishlistCount = clothingWishlist.length;
 
   return (
     <>

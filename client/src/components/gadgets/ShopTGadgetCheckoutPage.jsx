@@ -8,7 +8,7 @@ import {
 import confetti from 'canvas-confetti';
 
 export default function ShopTGadgetCheckoutPage() {
-  const { cart, clearCart, placeOrder } = useStore();
+  const { cart, clearCart, placeOrder, getNicheCart, getProductNiche } = useStore();
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
@@ -25,7 +25,8 @@ export default function ShopTGadgetCheckoutPage() {
   const [orderCompleted, setOrderCompleted] = useState(false);
   const [completedOrderId, setCompletedOrderId] = useState('');
 
-  const cartItems = Array.isArray(cart) ? cart : [];
+  const rawCart = getNicheCart ? getNicheCart('gadgets') : (Array.isArray(cart) ? cart : []);
+  const cartItems = rawCart.filter((item) => (getProductNiche ? getProductNiche(item) : (item.id || '').startsWith('shopt-') || (item.id || '').startsWith('addon-')) === 'gadgets');
   const subtotal = cartItems.reduce((sum, item) => sum + ((item.price || 0) * (item.quantity || 1)), 0);
   
   const deliveryCharge = deliveryLocation === 'inside_dhaka' ? 60 : 120;

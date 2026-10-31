@@ -16,13 +16,18 @@ export default function KicksCraftHeader({
   onOpenCart,
   onBackToGateway
 }) {
-  const { cart = [], wishlist = [] } = useStore();
+  const { cart = [], wishlist = [], getNicheCart, getNicheWishlist, getProductNiche } = useStore();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [searchFocused, setSearchFocused] = useState(false);
   const navigate = useNavigate();
 
-  const totalCartCount = Array.isArray(cart) ? cart.reduce((sum, item) => sum + (item.quantity || 1), 0) : 0;
-  const totalCartPrice = Array.isArray(cart) ? cart.reduce((sum, item) => sum + ((item.price || 0) * (item.quantity || 1)), 0) : 0;
+  const footwearItems = (getNicheCart ? getNicheCart('footwear') : (Array.isArray(cart) ? cart : []))
+    .filter((item) => (getProductNiche ? getProductNiche(item) : (item.id || '').startsWith('kc-')) === 'footwear');
+  const footwearWishlist = (getNicheWishlist ? getNicheWishlist('footwear') : (Array.isArray(wishlist) ? wishlist : []))
+    .filter((item) => (getProductNiche ? getProductNiche(item) : (item.id || '').startsWith('kc-')) === 'footwear');
+
+  const totalCartCount = footwearItems.reduce((sum, item) => sum + (item.quantity || 1), 0);
+  const totalCartPrice = footwearItems.reduce((sum, item) => sum + ((item.price || 0) * (item.quantity || 1)), 0);
 
   const handleBack = onBackToGateway || (() => navigate('/'));
 

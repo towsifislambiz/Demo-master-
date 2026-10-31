@@ -48,7 +48,7 @@ export default function KicksCraftAdminDashboardView() {
     categoryName: 'রানিং ও অ্যাথলেটিক',
     price: 5500,
     originalPrice: 7500,
-    image: '/footwear-images/Athletic_running_sneaker_product__fc5dbc43.jpg',
+    image: '/footwear-images/Athletic_running_sneaker_product__fc5dbc43.webp',
     stock: 8,
     sizes: [40, 41, 42, 43, 44]
   });
@@ -92,7 +92,7 @@ export default function KicksCraftAdminDashboardView() {
           price: 8490,
           selectedSize: 42,
           quantity: 1,
-          image: '/footwear-images/Retro_basketball_sneaker_studio___8667b319.jpg'
+          image: '/footwear-images/Retro_basketball_sneaker_studio___8667b319.webp'
         }
       ]
     },
@@ -115,7 +115,7 @@ export default function KicksCraftAdminDashboardView() {
           price: 6990,
           selectedSize: 43,
           quantity: 1,
-          image: '/footwear-images/Heather-grey_everyday_lifestyle___92d54958.jpg'
+          image: '/footwear-images/Heather-grey_everyday_lifestyle___92d54958.webp'
         }
       ]
     },
@@ -138,7 +138,7 @@ export default function KicksCraftAdminDashboardView() {
           price: 7490,
           selectedSize: 41,
           quantity: 1,
-          image: '/footwear-images/Handcrafted_Italian_leather_Oxfo__2f50679e.jpg'
+          image: '/footwear-images/Handcrafted_Italian_leather_Oxfo__2f50679e.webp'
         }
       ]
     }

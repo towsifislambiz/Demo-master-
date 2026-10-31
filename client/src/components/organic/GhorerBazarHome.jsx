@@ -64,7 +64,7 @@ const ORGANIC_FLAGSHIPS = [
     price: 890,
     oldPrice: 990,
     discount: '১২% ছাড়',
-    image: '/organic-images/Glass_jar_filled_with_honey_a0f0a2a1.jpg',
+    image: '/organic-images/Glass_jar_filled_with_honey_a0f0a2a1.webp',
     pin1: '🧭 সরাসরি সুন্দরবনের চাক থেকে',
     pin2: '🌿 ১০০% কাঁচা অপরিশোধিত মধু',
     productId: 'gb-honey-sundarban'
@@ -84,7 +84,7 @@ const ORGANIC_FLAGSHIPS = [
     price: 950,
     oldPrice: 1050,
     discount: '১০% ছাড়',
-    image: '/organic-images/Spoon_scooping_ghee_from_jar_b3e93d06.jpg',
+    image: '/organic-images/Spoon_scooping_ghee_from_jar_b3e93d06.webp',
     pin1: '🌾 পাবনার খামারের খাঁটি ননী',
     pin2: '🏆 ল্যাব টেস্টে ১০০% নির্ভেজাল',
     productId: 'gb-ghee-pabna'
@@ -104,7 +104,7 @@ const ORGANIC_FLAGSHIPS = [
     price: 1490,
     oldPrice: 1690,
     discount: '১৫% ছাড়',
-    image: '/organic-images/Honey_jar_on_wooden_board_d5a41667.jpg',
+    image: '/organic-images/Honey_jar_on_wooden_board_d5a41667.webp',
     pin1: '⚡ প্রিমিয়াম এনার্জি বুস্টার',
     pin2: '💎 ৮০০ গ্রাম মেগা ফ্যামিলি প্যাক',
     productId: 'gb-honey-nuts'
@@ -317,7 +317,7 @@ export default function GhorerBazarHome({ onBackToGateway }) {
                     className="w-full h-full object-cover group-hover:scale-108 group-hover:-rotate-1 transition-transform duration-700 ease-out relative z-10"
                     onError={(e) => {
                       e.target.onerror = null;
-                      e.target.src = '/organic-images/Glass_jar_filled_with_honey_a0f0a2a1.jpg';
+                      e.target.src = '/organic-images/Glass_jar_filled_with_honey_a0f0a2a1.webp';
                     }}
                   />
                 </div>
@@ -688,7 +688,7 @@ export default function GhorerBazarHome({ onBackToGateway }) {
             <div className="lg:col-span-5 relative">
               <div className="rounded-3xl overflow-hidden shadow-xl border-4 border-emerald-50 aspect-4/3 sm:aspect-square">
                 <img
-                  src="/organic-images/Organic_feast_on_wooden_table_0f0af9b2.jpg"
+                  src="/organic-images/Organic_feast_on_wooden_table_0f0af9b2.webp"
                   alt="ঘরের বাজারের খাঁটি অর্গানিক ফুড ফিস্ট"
                   className="w-full h-full object-cover"
                 />

@@ -56,7 +56,7 @@ export default function GhorerBazarAdminDashboardView() {
     badge: 'হট ডিল',
     badgeType: 'hot',
     shortDesc: '',
-    image: '/organic-images/Glass_jar_filled_with_honey_a0f0a2a1.jpg',
+    image: '/organic-images/Glass_jar_filled_with_honey_a0f0a2a1.webp',
     inStock: true,
     labTested: true
   });
@@ -138,7 +138,7 @@ export default function GhorerBazarAdminDashboardView() {
       badge: 'হট ডিল',
       badgeType: 'hot',
       shortDesc: '',
-      image: '/organic-images/Glass_jar_filled_with_honey_a0f0a2a1.jpg',
+      image: '/organic-images/Glass_jar_filled_with_honey_a0f0a2a1.webp',
       inStock: true,
       labTested: true
     });
@@ -546,7 +546,7 @@ export default function GhorerBazarAdminDashboardView() {
                           className="w-10 h-10 rounded-xl object-cover border border-stone-200 shrink-0"
                           onError={(e) => {
                             e.target.onerror = null;
-                            e.target.src = '/organic-images/Glass_jar_filled_with_honey_a0f0a2a1.jpg';
+                            e.target.src = '/organic-images/Glass_jar_filled_with_honey_a0f0a2a1.webp';
                           }}
                         />
                         <div className="flex-1 min-w-0">
@@ -658,7 +658,7 @@ export default function GhorerBazarAdminDashboardView() {
                             className="w-12 h-12 rounded-xl object-cover border border-stone-200 shrink-0"
                             onError={(e) => {
                               e.target.onerror = null;
-                              e.target.src = '/organic-images/Glass_jar_filled_with_honey_a0f0a2a1.jpg';
+                              e.target.src = '/organic-images/Glass_jar_filled_with_honey_a0f0a2a1.webp';
                             }}
                           />
                           <div className="min-w-0">
@@ -1073,7 +1073,7 @@ export default function GhorerBazarAdminDashboardView() {
                   type="text"
                   value={newProduct.image}
                   onChange={(e) => setNewProduct((p) => ({ ...p, image: e.target.value }))}
-                  placeholder="/organic-images/Glass_jar_filled_with_honey_a0f0a2a1.jpg"
+                  placeholder="/organic-images/Glass_jar_filled_with_honey_a0f0a2a1.webp"
                   className="w-full px-3 py-2 text-xs rounded-xl border border-stone-200 focus:border-[#055C32] focus:outline-none font-mono"
                 />
               </div>
@@ -1267,7 +1267,7 @@ export default function GhorerBazarAdminDashboardView() {
                         className="w-10 h-10 rounded-lg object-cover border border-stone-200"
                         onError={(e) => {
                           e.target.onerror = null;
-                          e.target.src = '/organic-images/Glass_jar_filled_with_honey_a0f0a2a1.jpg';
+                          e.target.src = '/organic-images/Glass_jar_filled_with_honey_a0f0a2a1.webp';
                         }}
                       />
                       <div>

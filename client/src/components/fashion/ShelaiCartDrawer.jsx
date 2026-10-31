@@ -17,10 +17,15 @@ export default function ShelaiCartDrawer() {
     updateQuantity, 
     clearCart,
     deliveryArea,
-    setDeliveryArea
+    setDeliveryArea,
+    getNicheCart,
+    getProductNiche
   } = useStore();
 
-  const cartSubtotal = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+  const rawCart = getNicheCart ? getNicheCart('clothing') : (Array.isArray(cart) ? cart : []);
+  const clothingCart = rawCart.filter((item) => (getProductNiche ? getProductNiche(item) : (item.id || '').startsWith('sh-')) === 'clothing');
+
+  const cartSubtotal = clothingCart.reduce((sum, item) => sum + item.price * item.quantity, 0);
   const freeDeliveryThreshold = 2500;
   const deliveryCharge = cartSubtotal >= freeDeliveryThreshold ? 0 : (deliveryArea === 'inside' ? 80 : 150);
   const cartTotal = cartSubtotal + deliveryCharge;
@@ -54,27 +59,27 @@ export default function ShelaiCartDrawer() {
             className="fixed inset-0 bg-black/60 backdrop-blur-sm transition-opacity"
           />
 
-          <div className="fixed inset-y-0 right-0 max-w-full flex pl-10">
+          <div className="fixed inset-y-0 right-0 max-w-full flex">
             <motion.div
               initial={{ x: '100%' }}
               animate={{ x: 0 }}
               exit={{ x: '100%' }}
               transition={{ type: 'spring', damping: 28, stiffness: 280 }}
-              className="w-screen max-w-md bg-[#fcfbf9] text-[#1c1917] shadow-2xl flex flex-col justify-between border-l border-[#e7e2d9]"
+              className="w-full sm:w-[420px] max-w-full bg-[#fcfbf9] text-[#1c1917] shadow-2xl flex flex-col justify-between border-l border-[#e7e2d9]"
             >
               {/* Drawer Header */}
-              <div className="p-4 sm:p-5 border-b border-[#e7e2d9] bg-white">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-2.5">
-                    <div className="w-9 h-9 rounded-full bg-[#0f291e] text-[#fef08a] flex items-center justify-center shadow-sm">
+              <div className="p-3.5 sm:p-5 border-b border-[#e7e2d9] bg-white">
+                <div className="flex items-center justify-between gap-2">
+                  <div className="flex items-center space-x-2 sm:space-x-2.5 min-w-0">
+                    <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-[#0f291e] text-[#fef08a] flex items-center justify-center shadow-sm shrink-0">
                       <ShoppingBag className="w-4 h-4" />
                     </div>
-                    <div>
-                      <h3 className="font-serif font-bold text-base sm:text-lg text-[#0f291e] leading-tight">
+                    <div className="min-w-0">
+                      <h3 className="font-serif font-bold text-sm sm:text-lg text-[#0f291e] leading-tight truncate">
                         আপনার শপিং ব্যাগ
                       </h3>
-                      <p className="text-[10px] font-mono text-[#854d0e] uppercase tracking-wider">
-                        {cart.length > 0 ? `${cart.reduce((sum, i) => sum + i.quantity, 0)}টি ড্রেস যোগ করা হয়েছে` : 'ব্যাগ খালি'}
+                      <p className="text-[10px] font-mono text-[#854d0e] uppercase tracking-wider truncate">
+                        {clothingCart.length > 0 ? `${clothingCart.reduce((sum, i) => sum + i.quantity, 0)}টি ড্রেস যোগ করা হয়েছে` : 'ব্যাগ খালি'}
                       </p>
                     </div>
                   </div>
@@ -90,7 +95,7 @@ export default function ShelaiCartDrawer() {
                 </div>
 
                 {/* Free Delivery Threshold Meter */}
-                {cart.length > 0 && (
+                {clothingCart.length > 0 && (
                   <div className="mt-3.5 p-3 rounded-2xl bg-[#f7f4ed] border border-[#e8e1d3]">
                     <div className="flex items-center justify-between text-xs font-serif mb-1.5">
                       <span className="font-bold text-[#0f291e] flex items-center gap-1.5">
@@ -126,7 +131,7 @@ export default function ShelaiCartDrawer() {
 
               {/* Drawer Items Scrollable List */}
               <div className="flex-1 overflow-y-auto p-4 sm:p-5 space-y-3.5 divide-y divide-[#f0ebd9]">
-                {cart.length === 0 ? (
+                {clothingCart.length === 0 ? (
                   <div className="py-16 text-center space-y-4">
                     <div className="w-16 h-16 rounded-full bg-[#f4efe6] text-[#c5a059] mx-auto flex items-center justify-center shadow-inner">
                       <ShoppingBag className="w-8 h-8 opacity-60" />
@@ -151,7 +156,7 @@ export default function ShelaiCartDrawer() {
                     </button>
                   </div>
                 ) : (
-                  cart.map((item) => (
+                  clothingCart.map((item) => (
                     <div key={item.variantKey} className="pt-3.5 first:pt-0 flex space-x-3.5 group">
                       {/* Thumbnail */}
                       <div className="w-20 h-24 rounded-xl overflow-hidden bg-[#f4efe6] shrink-0 border border-[#e7e2d9]">
@@ -234,7 +239,7 @@ export default function ShelaiCartDrawer() {
               </div>
 
               {/* Drawer Footer & Checkout Action */}
-              {cart.length > 0 && (
+              {clothingCart.length > 0 && (
                 <div className="p-4 sm:p-5 bg-white border-t border-[#e7e2d9] space-y-3.5 shadow-lg">
                   {/* Delivery Location Switcher */}
                   <div className="flex items-center justify-between text-xs bg-[#f7f4ed] p-2 rounded-xl border border-[#e8e1d3]">

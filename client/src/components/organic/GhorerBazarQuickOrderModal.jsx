@@ -201,7 +201,7 @@ export default function GhorerBazarQuickOrderModal({
                   className="w-16 h-16 rounded-xl object-cover border border-stone-200 shrink-0"
                   onError={(e) => {
                     e.target.onerror = null;
-                    e.target.src = '/organic-images/Glass_jar_filled_with_honey_a0f0a2a1.jpg';
+                    e.target.src = '/organic-images/Glass_jar_filled_with_honey_a0f0a2a1.webp';
                   }}
                 />
                 <div className="flex-1 min-w-0">

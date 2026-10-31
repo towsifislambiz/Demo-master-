@@ -9,10 +9,13 @@ import { FOOTWEAR_BRAND, FOOTWEAR_PRODUCTS } from '../../data/footwearData';
 
 export default function KicksCraftCheckoutPage() {
   const navigate = useNavigate();
-  const { cart = [], clearCart, addOrder } = useStore();
+  const { cart = [], clearCart, addOrder, getNicheCart, getProductNiche } = useStore();
+
+  const rawCart = getNicheCart ? getNicheCart('footwear') : cart;
+  const footwearCart = (Array.isArray(rawCart) ? rawCart : []).filter((item) => (getProductNiche ? getProductNiche(item) : (item.id || '').startsWith('kc-')) === 'footwear');
 
   // If cart is empty, populate with default featured product for seamless demo checkout
-  const checkoutItems = cart.length > 0 ? cart : [
+  const checkoutItems = footwearCart.length > 0 ? footwearCart : [
     {
       id: 'demo-nike-01',
       productId: 'kc-nike-01',
@@ -20,7 +23,7 @@ export default function KicksCraftCheckoutPage() {
       nameEn: 'Nike Air Jordan 1 Retro High OG Chicago',
       price: 8490,
       originalPrice: 11990,
-      image: '/footwear-images/Retro_basketball_sneaker_studio___8667b319.jpg',
+      image: '/footwear-images/Retro_basketball_sneaker_studio___8667b319.webp',
       brand: 'Nike / Jordan',
       selectedSize: 42,
       quantity: 1,

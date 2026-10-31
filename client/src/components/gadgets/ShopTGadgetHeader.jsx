@@ -16,14 +16,19 @@ export default function ShopTGadgetHeader({
   onOpenCart,
   onBackToGateway 
 }) {
-  const { cart, wishlist = [] } = useStore();
+  const { cart, wishlist = [], getNicheCart, getNicheWishlist, getProductNiche } = useStore();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const navigate = useNavigate();
 
-  const totalCartCount = Array.isArray(cart) ? cart.reduce((sum, item) => sum + (item.quantity || 1), 0) : 0;
-  const totalCartPrice = Array.isArray(cart) ? cart.reduce((sum, item) => sum + ((item.price || 0) * (item.quantity || 1)), 0) : 0;
-  const wishlistCount = Array.isArray(wishlist) ? wishlist.length : 0;
+  const gadgetItems = (getNicheCart ? getNicheCart('gadgets') : (Array.isArray(cart) ? cart : []))
+    .filter((item) => (getProductNiche ? getProductNiche(item) : (item.id || '').startsWith('shopt-') || (item.id || '').startsWith('addon-')) === 'gadgets');
+  const gadgetWishlist = (getNicheWishlist ? getNicheWishlist('gadgets') : (Array.isArray(wishlist) ? wishlist : []))
+    .filter((item) => (getProductNiche ? getProductNiche(item) : (item.id || '').startsWith('shopt-') || (item.id || '').startsWith('addon-')) === 'gadgets');
+
+  const totalCartCount = gadgetItems.reduce((sum, item) => sum + (item.quantity || 1), 0);
+  const totalCartPrice = gadgetItems.reduce((sum, item) => sum + ((item.price || 0) * (item.quantity || 1)), 0);
+  const wishlistCount = gadgetWishlist.length;
 
   const handleBack = onBackToGateway || (() => navigate('/'));
 

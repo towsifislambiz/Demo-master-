@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { BrowserRouter, Routes, Route, Navigate, useNavigate } from 'react-router-dom';
 import { StoreProvider, useStore } from './context/StoreContext';
 import ScrollToTop from './components/ScrollToTop';
@@ -68,43 +68,27 @@ function GatewayPage() {
 
 function StorePage() {
   const navigate = useNavigate();
-  const { activeNiche } = useStore();
+  const { setActiveNiche } = useStore();
 
-  if (activeNiche === 'beauty') {
-    return (
-      <div className="min-h-screen bg-[#FFF8F5]">
-        <RibanaBeautyStore onBackToGateway={() => navigate('/')} />
-      </div>
-    );
-  }
-
-  if (activeNiche === 'clothing') {
-    return (
-      <div className="min-h-screen bg-[#fcfbf9]">
-        <ShelaiFashionStore onBackToGateway={() => navigate('/')} />
-      </div>
-    );
-  }
-
-  if (activeNiche === 'gadgets') {
-    return <ShopTGadgetStore onBackToGateway={() => navigate('/')} />;
-  }
-
-  if (activeNiche === 'organic') {
-    return <GhorerBazarHome onBackToGateway={() => navigate('/')} />;
-  }
+  useEffect(() => {
+    setActiveNiche('clothing');
+  }, [setActiveNiche]);
 
   return (
-    <div className="min-h-screen bg-[#070b14] text-slate-100 flex flex-col">
-      <NicheSwitcherBar onBackToGateway={() => navigate('/')} />
-      <StorefrontView onBackToGateway={() => navigate('/')} />
-      <CartDrawer />
+    <div className="min-h-screen bg-[#fcfbf9]">
+      <ShelaiFashionStore onBackToGateway={() => navigate('/')} />
     </div>
   );
 }
 
 function BeautyPage() {
   const navigate = useNavigate();
+  const { setActiveNiche } = useStore();
+
+  useEffect(() => {
+    setActiveNiche('beauty');
+  }, [setActiveNiche]);
+
   return (
     <div className="min-h-screen bg-[#FFF8F5]">
       <RibanaBeautyStore onBackToGateway={() => navigate('/')} />
@@ -114,12 +98,34 @@ function BeautyPage() {
 
 function GadgetsPage() {
   const navigate = useNavigate();
+  const { setActiveNiche } = useStore();
+
+  useEffect(() => {
+    setActiveNiche('gadgets');
+  }, [setActiveNiche]);
+
   return <ShopTGadgetStore onBackToGateway={() => navigate('/')} />;
 }
 
 function OrganicPage() {
   const navigate = useNavigate();
+  const { setActiveNiche } = useStore();
+
+  useEffect(() => {
+    setActiveNiche('organic');
+  }, [setActiveNiche]);
+
   return <GhorerBazarHome onBackToGateway={() => navigate('/')} />;
+}
+
+function FootwearPage() {
+  const { setActiveNiche } = useStore();
+
+  useEffect(() => {
+    setActiveNiche('footwear');
+  }, [setActiveNiche]);
+
+  return <KicksCraftHome />;
 }
 
 function AdminPage() {
@@ -170,7 +176,7 @@ export default function App() {
           <Route path="/organic/admin" element={<OrganicAdminPage />} />
 
           {/* Footwear & Sneakers (KicksCraft BD) Routes */}
-          <Route path="/footwear" element={<KicksCraftHome />} />
+          <Route path="/footwear" element={<FootwearPage />} />
           <Route path="/footwear/shop" element={<KicksCraftShopPage />} />
           <Route path="/footwear/product/:productId" element={<KicksCraftProductDetailsPage />} />
           <Route path="/footwear/checkout" element={<KicksCraftCheckoutPage />} />

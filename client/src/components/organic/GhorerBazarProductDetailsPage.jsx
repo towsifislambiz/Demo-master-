@@ -200,7 +200,7 @@ export default function GhorerBazarProductDetailsPage() {
                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                 onError={(e) => {
                   e.target.onerror = null;
-                  e.target.src = '/organic-images/Glass_jar_filled_with_honey_a0f0a2a1.jpg';
+                  e.target.src = '/organic-images/Glass_jar_filled_with_honey_a0f0a2a1.webp';
                 }}
               />
 

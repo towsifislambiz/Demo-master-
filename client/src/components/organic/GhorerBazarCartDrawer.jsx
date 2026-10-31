@@ -12,12 +12,15 @@ export default function GhorerBazarCartDrawer({
   onClose
 }) {
   const navigate = useNavigate();
-  const { cart = [], removeFromCart, updateQuantity } = useStore();
+  const { cart = [], removeFromCart, updateQuantity, getNicheCart, getProductNiche } = useStore();
 
   if (!isOpen) return null;
 
-  const totalCartCount = cart.reduce((sum, item) => sum + (item.quantity || 1), 0);
-  const subtotal = cart.reduce((sum, item) => sum + ((item.price || 0) * (item.quantity || 1)), 0);
+  const rawCart = getNicheCart ? getNicheCart('organic') : cart;
+  const organicCart = rawCart.filter((item) => (getProductNiche ? getProductNiche(item) : (item.id || '').startsWith('gb-')) === 'organic');
+
+  const totalCartCount = organicCart.reduce((sum, item) => sum + (item.quantity || 1), 0);
+  const subtotal = organicCart.reduce((sum, item) => sum + ((item.price || 0) * (item.quantity || 1)), 0);
   const freeThreshold = GHORER_BAZAR_BRAND.freeDeliveryThreshold;
   const neededForFree = Math.max(0, freeThreshold - subtotal);
   const freeProgress = Math.min(100, Math.round((subtotal / freeThreshold) * 100));
@@ -82,7 +85,7 @@ export default function GhorerBazarCartDrawer({
 
         {/* Cart Item List */}
         <div className="flex-1 overflow-y-auto p-4 space-y-3">
-          {cart.length === 0 ? (
+          {organicCart.length === 0 ? (
             <div className="text-center py-16 space-y-3">
               <div className="w-20 h-20 rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center mx-auto">
                 <ShoppingBag className="w-10 h-10 stroke-1 text-emerald-700" />
@@ -100,7 +103,7 @@ export default function GhorerBazarCartDrawer({
               </button>
             </div>
           ) : (
-            cart.map((item) => {
+            organicCart.map((item) => {
               const itemKey = item.variantKey || item.id;
               const itemWeight = item.selectedSize || item.weight || item.selectedWeight || 'প্যাক';
               const price = item.price || 0;
@@ -118,7 +121,7 @@ export default function GhorerBazarCartDrawer({
                     className="w-16 h-16 rounded-xl object-cover border border-stone-200 shrink-0 bg-white"
                     onError={(e) => {
                       e.target.onerror = null;
-                      e.target.src = '/organic-images/Glass_jar_filled_with_honey_a0f0a2a1.jpg';
+                      e.target.src = '/organic-images/Glass_jar_filled_with_honey_a0f0a2a1.webp';
                     }}
                   />
 
@@ -178,7 +181,7 @@ export default function GhorerBazarCartDrawer({
         </div>
 
         {/* Footer Checkout Summary */}
-        {cart.length > 0 && (
+        {organicCart.length > 0 && (
           <div className="p-4 sm:p-5 border-t border-stone-200 bg-stone-50 shrink-0 space-y-3">
             <div className="space-y-1.5 text-xs text-stone-600">
               <div className="flex justify-between">

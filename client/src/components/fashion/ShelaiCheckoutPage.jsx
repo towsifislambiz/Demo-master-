@@ -20,8 +20,14 @@ export default function ShelaiCheckoutPage() {
     deliveryArea, 
     setDeliveryArea, 
     placeOrder,
-    contactSettings = {}
+    contactSettings = {},
+    getNicheCart,
+    getProductNiche
   } = useStore();
+
+  const rawCart = getNicheCart ? getNicheCart('clothing') : (Array.isArray(cart) ? cart : []);
+  const clothingCart = rawCart.filter((item) => (getProductNiche ? getProductNiche(item) : (item.id || '').startsWith('sh-')) === 'clothing');
+  const effectiveSubtotal = clothingCart.reduce((sum, item) => sum + (item.price || 0) * (item.quantity || 1), 0);
 
   const [customerName, setCustomerName] = useState('');
   const [phone, setPhone] = useState('');
@@ -37,9 +43,9 @@ export default function ShelaiCheckoutPage() {
   const [orderSuccess, setOrderSuccess] = useState(null);
 
   const freeDeliveryThreshold = 2500;
-  const isFreeDelivery = cartSubtotal >= freeDeliveryThreshold;
+  const isFreeDelivery = effectiveSubtotal >= freeDeliveryThreshold;
   const deliveryCharge = isFreeDelivery ? 0 : (deliveryArea === 'inside' ? 80 : 150);
-  const finalTotal = Math.max(0, cartSubtotal + deliveryCharge - appliedDiscount);
+  const finalTotal = Math.max(0, effectiveSubtotal + deliveryCharge - appliedDiscount);
 
   const handleApplyCoupon = (e) => {
     if (e) e.preventDefault();
@@ -64,7 +70,7 @@ export default function ShelaiCheckoutPage() {
 
   const handleSubmitOrder = async (e) => {
     e.preventDefault();
-    if (cart.length === 0) {
+    if (clothingCart.length === 0) {
       alert('আপনার শপিং ব্যাগে কোনো পণ্য নেই। ক্যাটালগ থেকে পণ্য নির্বাচন করুন।');
       return;
     }
@@ -76,6 +82,7 @@ export default function ShelaiCheckoutPage() {
     setIsSubmitting(true);
 
     const orderData = {
+      niche: 'clothing',
       customerName,
       phone,
       altPhone,
@@ -86,10 +93,10 @@ export default function ShelaiCheckoutPage() {
       paymentMethod,
       discount: appliedDiscount,
       coupon: appliedDiscount > 0 ? 'EID2026' : null,
-      subtotal: cartSubtotal,
+      subtotal: effectiveSubtotal,
       deliveryCharge,
       total: finalTotal,
-      items: cart,
+      items: clothingCart,
       date: new Date().toLocaleDateString('bn-BD', { year: 'numeric', month: 'long', day: 'numeric' })
     };
 
@@ -616,7 +623,7 @@ export default function ShelaiCheckoutPage() {
 
                   {/* Items List */}
                   <div className="max-h-72 overflow-y-auto space-y-3.5 divide-y divide-[#f5f0e6] pr-1 scrollbar-none">
-                    {cart.map((item) => (
+                    {clothingCart.map((item) => (
                       <div key={item.variantKey} className="pt-3.5 first:pt-0 flex space-x-3.5 text-xs">
                         <img
                           src={item.image}

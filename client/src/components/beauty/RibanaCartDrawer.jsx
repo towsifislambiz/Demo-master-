@@ -19,14 +19,19 @@ export default function RibanaCartDrawer() {
     updateQuantity, 
     addToCart,
     deliveryArea,
-    setDeliveryArea
+    setDeliveryArea,
+    getNicheCart,
+    getProductNiche
   } = useStore();
 
   const [couponCode, setCouponCode] = useState('');
   const [appliedCoupon, setAppliedCoupon] = useState(null);
   const [couponError, setCouponError] = useState('');
 
-  const cartSubtotal = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+  const rawCart = getNicheCart ? getNicheCart('beauty') : (Array.isArray(cart) ? cart : []);
+  const beautyCart = rawCart.filter((item) => (getProductNiche ? getProductNiche(item) : (item.id || '').startsWith('rb-')) === 'beauty');
+
+  const cartSubtotal = beautyCart.reduce((sum, item) => sum + item.price * item.quantity, 0);
   
   // Multi-tier reward thresholds (Unique feature!)
   const freeDeliveryThreshold = 1500;
@@ -88,31 +93,31 @@ export default function RibanaCartDrawer() {
             className="fixed inset-0 bg-[#25161A]/60 backdrop-blur-md transition-opacity"
           />
 
-          <div className="fixed inset-y-0 right-0 max-w-full flex pl-8 sm:pl-10">
+          <div className="fixed inset-y-0 right-0 max-w-full flex">
             <motion.div
               initial={{ x: '100%' }}
               animate={{ x: 0 }}
               exit={{ x: '100%' }}
               transition={{ type: 'spring', damping: 28, stiffness: 280 }}
-              className="w-screen max-w-md bg-gradient-to-b from-[#FFFDFB] via-[#FFF9F6] to-[#FAF1EB] text-[#2D1B22] shadow-[0_20px_60px_rgba(45,27,34,0.3)] flex flex-col justify-between border-l border-[#F0D5CC]/90"
+              className="w-full sm:w-[420px] max-w-full bg-gradient-to-b from-[#FFFDFB] via-[#FFF9F6] to-[#FAF1EB] text-[#2D1B22] shadow-[0_20px_60px_rgba(45,27,34,0.3)] flex flex-col justify-between border-l border-[#F0D5CC]/90"
             >
               {/* 1. Atelier Drawer Header */}
-              <div className="p-4 sm:p-5 border-b border-[#F0D5CC]/80 bg-white/80 backdrop-blur-lg sticky top-0 z-10">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-3">
-                    <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-[#8E2A3E] to-[#5C1625] text-white flex items-center justify-center shadow-md shadow-[#8E2A3E]/20">
+              <div className="p-3.5 sm:p-5 border-b border-[#F0D5CC]/80 bg-white/80 backdrop-blur-lg sticky top-0 z-10">
+                <div className="flex items-center justify-between gap-2">
+                  <div className="flex items-center space-x-2.5 sm:space-x-3 min-w-0">
+                    <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-2xl bg-gradient-to-br from-[#8E2A3E] to-[#5C1625] text-white flex items-center justify-center shadow-md shadow-[#8E2A3E]/20 shrink-0">
                       <ShoppingBag className="w-4 h-4 text-pink-200" />
                     </div>
-                    <div>
+                    <div className="min-w-0">
                       <div className="flex items-center gap-1.5">
-                        <h3 className="font-serif font-black text-base sm:text-lg text-[#241518] leading-tight">
+                        <h3 className="font-serif font-black text-sm sm:text-lg text-[#241518] leading-tight truncate">
                           আপনার বিউটি ব্যাগ
                         </h3>
-                        <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                        <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse shrink-0" />
                       </div>
-                      <p className="text-[11px] font-mono text-[#8C6D74] font-medium">
-                        {cart.length > 0 
-                          ? `${cart.reduce((sum, i) => sum + i.quantity, 0)}টি খাঁটি অর্গানিক প্রোডাক্ট যুক্ত হয়েছে` 
+                      <p className="text-[10.5px] sm:text-[11px] font-mono text-[#8C6D74] font-medium truncate">
+                        {beautyCart.length > 0 
+                          ? `${beautyCart.reduce((sum, i) => sum + i.quantity, 0)}টি খাঁটি অর্গানিক প্রোডাক্ট যুক্ত হয়েছে` 
                           : 'ব্যাগ খালি'}
                       </p>
                     </div>
@@ -121,7 +126,7 @@ export default function RibanaCartDrawer() {
                   <button
                     type="button"
                     onClick={() => setIsCartOpen(false)}
-                    className="w-8 h-8 rounded-full bg-white hover:bg-[#FAF0E8] text-[#241518] flex items-center justify-center transition-all cursor-pointer border border-[#F0D5CC] shadow-2xs hover:scale-105 active:scale-95"
+                    className="w-8 h-8 rounded-full bg-white hover:bg-[#FAF0E8] text-[#241518] flex items-center justify-center transition-all cursor-pointer border border-[#F0D5CC] shadow-2xs hover:scale-105 active:scale-95 shrink-0"
                     title="বন্ধ করুন"
                   >
                     <X className="w-4 h-4" />
@@ -129,28 +134,28 @@ export default function RibanaCartDrawer() {
                 </div>
 
                 {/* 2. UNIQUE FEATURE: Multi-Tier Reward Progress Meter */}
-                {cart.length > 0 && (
-                  <div className="mt-3.5 p-3 rounded-2xl bg-gradient-to-br from-white to-[#FFF5EF] border border-[#F0D5CC] shadow-2xs space-y-2">
-                    <div className="flex items-center justify-between text-xs font-serif">
-                      <div className="flex items-center gap-1.5 font-bold text-[#241518]">
+                {beautyCart.length > 0 && (
+                  <div className="mt-3 p-2.5 sm:p-3 rounded-2xl bg-gradient-to-br from-white to-[#FFF5EF] border border-[#F0D5CC] shadow-2xs space-y-1.5 sm:space-y-2">
+                    <div className="flex items-center justify-between gap-1 text-[11px] sm:text-xs font-serif">
+                      <div className="flex items-center gap-1.5 font-bold text-[#241518] min-w-0">
                         {isFreeGift ? (
                           <>
-                            <Gift className="w-3.5 h-3.5 text-amber-500 animate-bounce" />
-                            <span className="text-emerald-700 font-black">অভিনন্দন! ফ্রি গিফট ও ফ্রি ডেলিভারি আনলকড! 🎉</span>
+                            <Gift className="w-3.5 h-3.5 text-amber-500 animate-bounce shrink-0" />
+                            <span className="text-emerald-700 font-black truncate">অভিনন্দন! ফ্রি গিফট ও ফ্রি ডেলিভারি আনলকড! 🎉</span>
                           </>
                         ) : isFreeDelivery ? (
                           <>
-                            <Truck className="w-3.5 h-3.5 text-emerald-600" />
-                            <span className="text-emerald-700 font-bold">ফ্রি ডেলিভারি আনলকড! আর ৳{remainingForFreeGift.toLocaleString('en-US')} অর্ডারে ফ্রি গিফট!</span>
+                            <Truck className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+                            <span className="text-emerald-700 font-bold truncate">ফ্রি ডেলিভারি! আর ৳{remainingForFreeGift.toLocaleString('en-US')} এ গিফট!</span>
                           </>
                         ) : (
                           <>
-                            <Truck className="w-3.5 h-3.5 text-[#8E2A3E]" />
-                            <span>আর মাত্র ৳{remainingForFreeDelivery.toLocaleString('en-US')} অর্ডারে <strong>ফ্রি হোম ডেলিভারি</strong>!</span>
+                            <Truck className="w-3.5 h-3.5 text-[#8E2A3E] shrink-0" />
+                            <span className="truncate">আর মাত্র ৳{remainingForFreeDelivery.toLocaleString('en-US')} এ <strong>ফ্রি ডেলিভারি</strong>!</span>
                           </>
                         )}
                       </div>
-                      <span className="text-[11px] font-mono font-bold text-[#8E2A3E]">{progressPercent}%</span>
+                      <span className="text-[10px] sm:text-[11px] font-mono font-bold text-[#8E2A3E] shrink-0">{progressPercent}%</span>
                     </div>
 
                     {/* Progress Track */}
@@ -178,7 +183,7 @@ export default function RibanaCartDrawer() {
 
               {/* 3. Cart Items Scrollable Container */}
               <div className="flex-1 overflow-y-auto p-4 sm:p-5 space-y-3.5">
-                {cart.length === 0 ? (
+                {beautyCart.length === 0 ? (
                   <div className="h-full flex flex-col items-center justify-center text-center p-6 space-y-4">
                     <div className="w-20 h-20 rounded-full bg-gradient-to-tr from-[#FAF0E8] to-[#FFEBE4] border border-[#F0D5CC] flex items-center justify-center text-[#8E2A3E] shadow-inner">
                       <ShoppingBag className="w-9 h-9 stroke-[1.4] text-[#8E2A3E]" />
@@ -204,7 +209,7 @@ export default function RibanaCartDrawer() {
                   <>
                     {/* Item Cards */}
                     <div className="space-y-3">
-                      {cart.map((item) => (
+                      {beautyCart.map((item) => (
                         <motion.div
                           layout
                           key={item.variantKey || item.id}
@@ -404,8 +409,8 @@ export default function RibanaCartDrawer() {
               </div>
 
               {/* 7. Drawer Footer: Calculations & Neon Aurora Checkout */}
-              {cart.length > 0 && (
-                <div className="p-4 sm:p-5 border-t border-[#F0D5CC] bg-white/95 backdrop-blur-md space-y-3 sticky bottom-0 z-10 shadow-[0_-10px_30px_rgba(45,27,34,0.05)]">
+              {beautyCart.length > 0 && (
+                <div className="p-3.5 sm:p-5 border-t border-[#F0D5CC] bg-white/95 backdrop-blur-md space-y-2.5 sm:space-y-3 sticky bottom-0 z-10 shadow-[0_-10px_30px_rgba(45,27,34,0.05)]">
                   {/* Calculation Breakdown */}
                   <div className="space-y-1.5 text-xs">
                     <div className="flex justify-between text-[#7A5B63]">

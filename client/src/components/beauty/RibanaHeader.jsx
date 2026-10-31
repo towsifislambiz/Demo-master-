@@ -17,12 +17,17 @@ export default function RibanaHeader({
   showCategories = true
 }) {
   const navigate = useNavigate();
-  const { cart = [], wishlist = [], setIsCartOpen, cartSubtotal = 0 } = useStore();
+  const { cart = [], wishlist = [], setIsCartOpen, cartSubtotal = 0, getNicheCart, getNicheWishlist, getProductNiche } = useStore();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [searchFocused, setSearchFocused] = useState(false);
 
-  const totalCartCount = cart.reduce((sum, item) => sum + item.quantity, 0);
-  const wishlistCount = wishlist.length;
+  const beautyItems = (getNicheCart ? getNicheCart('beauty') : cart)
+    .filter((item) => (getProductNiche ? getProductNiche(item) : (item.id || '').startsWith('rb-')) === 'beauty');
+  const beautyWishlist = (getNicheWishlist ? getNicheWishlist('beauty') : wishlist)
+    .filter((item) => (getProductNiche ? getProductNiche(item) : (item.id || '').startsWith('rb-')) === 'beauty');
+
+  const totalCartCount = beautyItems.reduce((sum, item) => sum + (item.quantity || 1), 0);
+  const wishlistCount = beautyWishlist.length;
 
   const categories = [
     { id: 'all', nameBn: 'সব কালেকশন', nameEn: 'All Collection', icon: '✦' },

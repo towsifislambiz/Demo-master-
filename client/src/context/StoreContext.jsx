@@ -34,7 +34,7 @@ const INITIAL_DEMO_ORDERS = [
         price: 890,
         weight: '৫০০ গ্রাম',
         quantity: 2,
-        image: '/organic-images/Glass_jar_filled_with_honey_a0f0a2a1.jpg'
+        image: '/organic-images/Glass_jar_filled_with_honey_a0f0a2a1.webp'
       }
     ]
   },
@@ -61,7 +61,7 @@ const INITIAL_DEMO_ORDERS = [
         price: 1490,
         weight: '৮০০ গ্রাম',
         quantity: 1,
-        image: '/organic-images/Honey_jar_on_wooden_board_d5a41667.jpg'
+        image: '/organic-images/Honey_jar_on_wooden_board_d5a41667.webp'
       }
     ]
   },
@@ -446,26 +446,106 @@ const INITIAL_DEMO_ORDERS = [
   }
 ];
 
+export function getProductNiche(product) {
+  if (!product) return 'clothing';
+  if (product.niche) return product.niche;
+  const id = String(product.id || '');
+  if (id.startsWith('shopt-') || id.startsWith('addon-')) return 'gadgets';
+  if (id.startsWith('gb-')) return 'organic';
+  if (id.startsWith('rb-') || id.startsWith('slide-')) return 'beauty';
+  if (id.startsWith('kc-') || id.startsWith('banner-')) return 'footwear';
+  if (id.startsWith('sh-')) return 'clothing';
+  return 'clothing';
+}
+
+function detectNicheFromLocation() {
+  if (typeof window === 'undefined') return 'clothing';
+  const path = window.location.pathname || '';
+  if (path.startsWith('/organic')) return 'organic';
+  if (path.startsWith('/beauty')) return 'beauty';
+  if (path.startsWith('/gadgets')) return 'gadgets';
+  if (path.startsWith('/footwear')) return 'footwear';
+  if (path.startsWith('/store')) return 'clothing';
+  return 'clothing';
+}
+
 export function StoreProvider({ children }) {
-  const [activeNiche, setActiveNiche] = useState('clothing');
+  const [activeNiche, setActiveNiche] = useState(detectNicheFromLocation);
+
+  // Automatically update activeNiche on browser navigation / route changes
+  useEffect(() => {
+    const handleLocationChange = () => {
+      const detected = detectNicheFromLocation();
+      setActiveNiche(detected);
+    };
+    window.addEventListener('popstate', handleLocationChange);
+    return () => window.removeEventListener('popstate', handleLocationChange);
+  }, []);
   
-  // Shopping Cart State
-  const [cart, setCart] = useState(() => {
+  // Shopping Cart State: Scoped & Isolated per Store Niche
+  const [cartsByNiche, setCartsByNiche] = useState(() => {
     try {
-      const saved = localStorage.getItem('wcm_cart');
-      return saved ? JSON.parse(saved) : [];
+      const saved = localStorage.getItem('wcm_carts_by_niche');
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (parsed && typeof parsed === 'object') {
+          return {
+            clothing: Array.isArray(parsed.clothing) ? parsed.clothing : [],
+            beauty: Array.isArray(parsed.beauty) ? parsed.beauty : [],
+            gadgets: Array.isArray(parsed.gadgets) ? parsed.gadgets : [],
+            organic: Array.isArray(parsed.organic) ? parsed.organic : [],
+            footwear: Array.isArray(parsed.footwear) ? parsed.footwear : []
+          };
+        }
+      }
+      // Backward compatibility: Migrate legacy single cart
+      const oldCart = localStorage.getItem('wcm_cart');
+      const migrated = { clothing: [], beauty: [], gadgets: [], organic: [], footwear: [] };
+      if (oldCart) {
+        const parsedOld = JSON.parse(oldCart);
+        if (Array.isArray(parsedOld)) {
+          parsedOld.forEach((item) => {
+            const n = getProductNiche(item);
+            if (migrated[n]) migrated[n].push({ ...item, niche: n });
+          });
+        }
+      }
+      return migrated;
     } catch {
-      return [];
+      return { clothing: [], beauty: [], gadgets: [], organic: [], footwear: [] };
     }
   });
 
-  // Wishlist State
-  const [wishlist, setWishlist] = useState(() => {
+  // Wishlist State: Scoped & Isolated per Store Niche
+  const [wishlistsByNiche, setWishlistsByNiche] = useState(() => {
     try {
-      const saved = localStorage.getItem('wcm_wishlist');
-      return saved ? JSON.parse(saved) : [];
+      const saved = localStorage.getItem('wcm_wishlists_by_niche');
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (parsed && typeof parsed === 'object') {
+          return {
+            clothing: Array.isArray(parsed.clothing) ? parsed.clothing : [],
+            beauty: Array.isArray(parsed.beauty) ? parsed.beauty : [],
+            gadgets: Array.isArray(parsed.gadgets) ? parsed.gadgets : [],
+            organic: Array.isArray(parsed.organic) ? parsed.organic : [],
+            footwear: Array.isArray(parsed.footwear) ? parsed.footwear : []
+          };
+        }
+      }
+      const oldWishlist = localStorage.getItem('wcm_wishlist');
+      const migrated = { clothing: [], beauty: [], gadgets: [], organic: [], footwear: [] };
+      if (oldWishlist) {
+        const parsedOld = JSON.parse(oldWishlist);
+        if (Array.isArray(parsedOld)) {
+          parsedOld.forEach((item) => {
+            const n = getProductNiche(item);
+            if (migrated[n]) migrated[n].push({ ...item, niche: n });
+          });
+        }
+      }
+      return migrated;
     } catch {
-      return [];
+      return { clothing: [], beauty: [], gadgets: [], organic: [], footwear: [] };
     }
   });
 
@@ -678,19 +758,21 @@ export function StoreProvider({ children }) {
     }
   });
 
-  // Sync cart to localStorage
+  // Sync cartsByNiche and fallback legacy cart to localStorage
   useEffect(() => {
     try {
-      localStorage.setItem('wcm_cart', JSON.stringify(cart));
+      localStorage.setItem('wcm_carts_by_niche', JSON.stringify(cartsByNiche));
+      localStorage.setItem('wcm_cart', JSON.stringify(cartsByNiche[activeNiche] || []));
     } catch (_) {}
-  }, [cart]);
+  }, [cartsByNiche, activeNiche]);
 
-  // Sync wishlist to localStorage
+  // Sync wishlistsByNiche to localStorage
   useEffect(() => {
     try {
-      localStorage.setItem('wcm_wishlist', JSON.stringify(wishlist));
+      localStorage.setItem('wcm_wishlists_by_niche', JSON.stringify(wishlistsByNiche));
+      localStorage.setItem('wcm_wishlist', JSON.stringify(wishlistsByNiche[activeNiche] || []));
     } catch (_) {}
-  }, [wishlist]);
+  }, [wishlistsByNiche, activeNiche]);
 
   // Sync shelai products to localStorage
   useEffect(() => {
@@ -790,97 +872,138 @@ export function StoreProvider({ children }) {
     } catch (_) {}
   }, [isOrganicAdminAuthenticated]);
 
-  // Wishlist actions
+  // Active niche cart & wishlist accessors
+  const activeCart = cartsByNiche[activeNiche] || [];
+  const activeWishlist = wishlistsByNiche[activeNiche] || [];
+
+  // Wishlist actions (isolated per niche)
   const toggleWishlist = (product) => {
-    setWishlist((prev) => {
-      const exists = prev.some((p) => p.id === product.id);
+    const itemNiche = getProductNiche(product) || activeNiche;
+    setWishlistsByNiche((prev) => {
+      const currentList = prev[itemNiche] || [];
+      const exists = currentList.some((p) => p.id === product.id);
+      let updated;
       if (exists) {
-        return prev.filter((p) => p.id !== product.id);
+        updated = currentList.filter((p) => p.id !== product.id);
+      } else {
+        updated = [...currentList, { ...product, niche: itemNiche }];
       }
-      return [...prev, product];
+      return { ...prev, [itemNiche]: updated };
     });
   };
 
-  const isInWishlist = (productId) => wishlist.some((p) => p.id === productId);
-  const clearWishlist = () => setWishlist([]);
+  const isInWishlist = (productId) => {
+    const currentList = wishlistsByNiche[activeNiche] || [];
+    return currentList.some((p) => p.id === productId);
+  };
 
-  // Add to cart with optional selected size/color/stitching
+  const clearWishlist = (targetNiche) => {
+    const n = targetNiche || activeNiche;
+    setWishlistsByNiche((prev) => ({ ...prev, [n]: [] }));
+  };
+
+  // Add to cart with strict niche isolation
   const addToCart = (product, selectedVariant = {}) => {
-    setCart((prev) => {
-      const variantKey = `${product.id}-${selectedVariant.size || 'std'}-${selectedVariant.stitching || 'def'}`;
-      const existing = prev.find((item) => item.variantKey === variantKey);
+    const itemNiche = getProductNiche(product) || activeNiche;
+    setCartsByNiche((prev) => {
+      const nicheItems = prev[itemNiche] || [];
+      const variantKey = `${product.id}-${selectedVariant.size || selectedVariant.weight || 'std'}-${selectedVariant.stitching || selectedVariant.color || 'def'}`;
+      const existing = nicheItems.find((item) => item.variantKey === variantKey);
+      let updatedNicheItems;
       if (existing) {
-        return prev.map((item) =>
-          item.variantKey === variantKey ? { ...item, quantity: item.quantity + 1 } : item
+        updatedNicheItems = nicheItems.map((item) =>
+          item.variantKey === variantKey ? { ...item, quantity: (item.quantity || 1) + 1 } : item
         );
+      } else {
+        updatedNicheItems = [
+          ...nicheItems,
+          {
+            ...product,
+            niche: itemNiche,
+            variantKey,
+            selectedSize: selectedVariant.size || product.sizes?.[0] || 'M',
+            selectedWeight: selectedVariant.weight || null,
+            selectedStitching: selectedVariant.stitching || product.stitchingOptions?.[0] || 'Stitched',
+            selectedColor: selectedVariant.color || product.colors?.[0]?.name || null,
+            quantity: 1,
+          },
+        ];
       }
-      return [
-        ...prev,
-        {
-          ...product,
-          variantKey,
-          selectedSize: selectedVariant.size || product.sizes?.[0] || 'M',
-          selectedStitching: selectedVariant.stitching || product.stitchingOptions?.[0] || 'Stitched',
-          selectedColor: selectedVariant.color || product.colors?.[0]?.name || null,
-          quantity: 1,
-        },
-      ];
+      return { ...prev, [itemNiche]: updatedNicheItems };
     });
     setIsCartOpen(true);
   };
 
   const removeFromCart = (targetKeyOrId) => {
     if (!targetKeyOrId) return;
-    setCart((prev) =>
-      prev.filter((item) => {
-        const matchesVariant = item.variantKey && String(item.variantKey) === String(targetKeyOrId);
-        const matchesId = item.id !== undefined && String(item.id) === String(targetKeyOrId);
-        // If it matches either, remove it
-        return !(matchesVariant || matchesId);
-      })
-    );
+    setCartsByNiche((prev) => {
+      const updated = { ...prev };
+      for (const k of Object.keys(updated)) {
+        updated[k] = (updated[k] || []).filter((item) => {
+          const matchesVariant = item.variantKey && String(item.variantKey) === String(targetKeyOrId);
+          const matchesId = item.id !== undefined && String(item.id) === String(targetKeyOrId);
+          return !(matchesVariant || matchesId);
+        });
+      }
+      return updated;
+    });
   };
 
   const updateQuantity = (targetKeyOrId, deltaOrQty) => {
     if (!targetKeyOrId) return;
-    setCart((prev) =>
-      prev
-        .map((item) => {
-          const matchesVariant = item.variantKey && String(item.variantKey) === String(targetKeyOrId);
-          const matchesId = item.id !== undefined && String(item.id) === String(targetKeyOrId);
-          if (matchesVariant || matchesId) {
-            let newQty;
-            if (typeof deltaOrQty === 'number') {
-              if (deltaOrQty === 1 || deltaOrQty === -1) {
-                newQty = (item.quantity || 1) + deltaOrQty;
+    setCartsByNiche((prev) => {
+      const updated = { ...prev };
+      for (const k of Object.keys(updated)) {
+        updated[k] = (updated[k] || [])
+          .map((item) => {
+            const matchesVariant = item.variantKey && String(item.variantKey) === String(targetKeyOrId);
+            const matchesId = item.id !== undefined && String(item.id) === String(targetKeyOrId);
+            if (matchesVariant || matchesId) {
+              let newQty;
+              if (typeof deltaOrQty === 'number') {
+                if (deltaOrQty === 1 || deltaOrQty === -1) {
+                  newQty = (item.quantity || 1) + deltaOrQty;
+                } else {
+                  newQty = deltaOrQty;
+                }
               } else {
-                newQty = deltaOrQty;
+                newQty = (item.quantity || 1) + 1;
               }
-            } else {
-              newQty = (item.quantity || 1) + 1;
+              return newQty > 0 ? { ...item, quantity: newQty } : null;
             }
-            return newQty > 0 ? { ...item, quantity: newQty } : null;
-          }
-          return item;
-        })
-        .filter(Boolean)
-    );
+            return item;
+          })
+          .filter(Boolean);
+      }
+      return updated;
+    });
   };
 
-  const clearCart = () => setCart([]);
+  const clearCart = (targetNiche) => {
+    const n = targetNiche || activeNiche;
+    setCartsByNiche((prev) => ({ ...prev, [n]: [] }));
+  };
 
-  // Calculate totals
-  const cartSubtotal = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+  // Calculate totals for currently active store niche
+  const cartSubtotal = activeCart.reduce((sum, item) => sum + (item.price || 0) * (item.quantity || 1), 0);
   const deliveryCharge = deliveryArea === 'inside' ? 80 : 150;
-  const cartTotal = cartSubtotal + (cart.length > 0 ? deliveryCharge : 0);
-  const totalItemsCount = cart.reduce((sum, item) => sum + item.quantity, 0);
+  const cartTotal = cartSubtotal + (activeCart.length > 0 ? deliveryCharge : 0);
+  const totalItemsCount = activeCart.reduce((sum, item) => sum + (item.quantity || 1), 0);
+
+  // Selector helpers for components wanting explicit store data
+  const getNicheCart = (niche) => cartsByNiche[niche] || [];
+  const getNicheCartCount = (niche) => (cartsByNiche[niche] || []).reduce((sum, item) => sum + (item.quantity || 1), 0);
+  const getNicheWishlist = (niche) => wishlistsByNiche[niche] || [];
 
   // Submit order to Firestore and Local State
   const placeOrder = async (customerDetails) => {
-    const orderId = customerDetails.id || customerDetails.orderId || ('SHL-' + Math.floor(100000 + Math.random() * 900000));
+    const orderNiche = customerDetails.niche || activeNiche;
+    const prefix = orderNiche === 'beauty' ? 'RBN-' : orderNiche === 'organic' ? 'GB-' : orderNiche === 'gadgets' ? 'SHOPT-' : orderNiche === 'footwear' ? 'KC-' : 'SHL-';
+    const orderId = customerDetails.id || customerDetails.orderId || (prefix + Math.floor(100000 + Math.random() * 900000));
     const orderData = {
       id: orderId,
       orderId,
+      niche: orderNiche,
       ...customerDetails,
       status: customerDetails.status || 'Pending',
       createdAt: customerDetails.createdAt || new Date().toISOString(),
@@ -895,7 +1018,7 @@ export function StoreProvider({ children }) {
     } catch (_) {}
 
     setOrders((prev) => [orderData, ...prev]);
-    clearCart();
+    clearCart(orderNiche);
     return orderData;
   };
 
@@ -1085,8 +1208,14 @@ export function StoreProvider({ children }) {
         currentNicheData,
         shelaiProducts,
         ribanaProducts,
-        cart,
-        wishlist,
+        cart: activeCart,
+        wishlist: activeWishlist,
+        cartsByNiche,
+        wishlistsByNiche,
+        getNicheCart,
+        getNicheCartCount,
+        getNicheWishlist,
+        getProductNiche,
         toggleWishlist,
         isInWishlist,
         clearWishlist,

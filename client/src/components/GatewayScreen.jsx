@@ -5,7 +5,7 @@ import {
   ExternalLink, ShieldAlert, X
 } from 'lucide-react';
 
-import gadgetEarbuds from '../assets/gadgets/earbuds_transparent_anc.jpg';
+import gadgetEarbuds from '../assets/gadgets/earbuds_transparent_anc.webp';
 
 function InteractiveCosmicBackground() {
   const canvasRef = useRef(null);
@@ -232,7 +232,7 @@ export default function GatewayScreen({ onSelectNiche }) {
       haloGradient: 'from-amber-500/40 via-yellow-400/25 to-orange-600/30',
       pillBg: 'bg-amber-500/10 text-amber-300 border-amber-500/30',
       btnGrad: 'from-amber-400 to-orange-500 text-slate-950 font-black hover:from-amber-300 hover:to-orange-400',
-      image: '/organic-images/Glass_jar_filled_with_honey_a0f0a2a1.jpg',
+      image: '/organic-images/Glass_jar_filled_with_honey_a0f0a2a1.webp',
       badge: '১০০% খাঁটি নিশ্চয়তা',
       heroHighlight: 'সুন্দরবনের খাঁটি কাঁচা মধু',
       features: ['🍯 ন্যাচারাল চাকের মধু', '🌱 কোল্ড প্রেস সরিষার তেল', '⚡ ১-ক্লিক ফাস্ট অর্ডার'],
@@ -253,7 +253,7 @@ export default function GatewayScreen({ onSelectNiche }) {
       haloGradient: 'from-orange-500/40 via-red-500/25 to-amber-600/30',
       pillBg: 'bg-orange-500/10 text-orange-300 border-orange-500/30',
       btnGrad: 'from-orange-500 to-red-600 text-white font-black hover:from-orange-400 hover:to-red-500',
-      image: '/footwear-images/Retro_basketball_sneaker_studio___8667b319.jpg',
+      image: '/footwear-images/Retro_basketball_sneaker_studio___8667b319.webp',
       badge: '২৪টি অফিশিয়াল ড্রপ',
       heroHighlight: 'এয়ার জর্ডান ১ রেট্রো শিকাগো',
       features: ['👟 EU ৪০-৪৪ সাইজ চিপস', '🔍 ২.২x মাউস জুম লেন্স', '📊 ফিল্টার শপ ক্যাটালগ'],
@@ -357,7 +357,7 @@ export default function GatewayScreen({ onSelectNiche }) {
         {/* Desktop: 5 Cols | Tablet: 3 Cols | Mobile: 2 Cols + Wide Featured 5th Card*/}
         {/* ========================================================================= */}
         <div className="w-full max-w-7xl mx-auto">
-          <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-3 sm:gap-4 lg:gap-4 w-full">
+          <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-2.5 sm:gap-4 lg:gap-4 w-full">
             {categories.map((cat, idx) => {
               const isFifthCard = idx === 4;
               const isHovered = hoveredCard === cat.id;
@@ -370,9 +370,9 @@ export default function GatewayScreen({ onSelectNiche }) {
                   transition={{ duration: 0.35, delay: idx * 0.05 }}
                   onClick={() => onSelectNiche(cat.id)}
                   onMouseEnter={() => setHoveredCard(cat.id)}
-                  className={`group relative rounded-[22px] sm:rounded-[26px] border-2 ${
+                  className={`group relative rounded-[20px] sm:rounded-[26px] border-2 ${
                     isHovered ? cat.activeBorderClass : cat.borderClass
-                  } ${cat.glowNormal} hover:${cat.glowActive} bg-[#070e1e]/90 backdrop-blur-xl p-3 sm:p-4 flex flex-col justify-between text-left cursor-pointer transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl ${
+                  } ${cat.glowNormal} hover:${cat.glowActive} bg-[#070e1e]/90 backdrop-blur-xl p-2.5 sm:p-4 flex flex-col justify-between text-left cursor-pointer transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl overflow-hidden ${
                     isFifthCard ? 'col-span-2 md:col-span-1 xl:col-span-1' : 'col-span-1'
                   }`}
                 >
@@ -384,26 +384,26 @@ export default function GatewayScreen({ onSelectNiche }) {
                     />
                   )}
 
-                  {/* Standard Card Layout (Used on all cards, with special horizontal flow for 5th card on mobile) */}
-                  <div className={isFifthCard ? "flex flex-col sm:flex-col md:flex-col justify-between h-full" : "flex flex-col justify-between h-full"}>
+                  {/* Standard Card Layout */}
+                  <div className={isFifthCard ? "flex flex-col sm:flex-col md:flex-col justify-between h-full min-w-0" : "flex flex-col justify-between h-full min-w-0"}>
                     
-                    <div>
+                    <div className="min-w-0">
                       {/* Top Brand Header */}
-                      <div className="flex items-center justify-between gap-1 mb-2.5">
-                        <span className="text-[9px] sm:text-[10px] font-black uppercase tracking-wider text-slate-400 group-hover:text-white transition-colors truncate">
+                      <div className="flex items-center justify-between gap-1 mb-2 sm:mb-2.5">
+                        <span className="text-[8.5px] sm:text-[10px] font-black uppercase tracking-wider text-slate-400 group-hover:text-white transition-colors truncate">
                           {cat.brandName}
                         </span>
-                        <span className={`px-1.5 sm:px-2 py-0.5 rounded-full text-[8px] sm:text-[9px] font-bold border truncate ${cat.pillBg}`}>
+                        <span className={`px-1.5 sm:px-2 py-0.5 rounded-full text-[7.5px] sm:text-[9px] font-bold border truncate shrink-0 ${cat.pillBg}`}>
                           {cat.badge}
                         </span>
                       </div>
 
                       {/* 3D Floating Product Showcase Window */}
-                      <div className="relative aspect-[16/11] w-full rounded-xl sm:rounded-2xl bg-gradient-to-b from-white/[0.06] to-black/40 border border-white/10 overflow-hidden p-2 flex items-center justify-center shadow-inner group-hover:border-white/20 transition-all duration-300">
+                      <div className="relative aspect-[16/11] w-full rounded-xl sm:rounded-2xl bg-gradient-to-b from-white/[0.06] to-black/40 border border-white/10 overflow-hidden p-1.5 sm:p-2 flex items-center justify-center shadow-inner group-hover:border-white/20 transition-all duration-300">
                         
                         {/* Radial Accent Glow behind Product */}
                         <div 
-                          className="absolute w-24 h-24 rounded-full blur-xl opacity-20 group-hover:opacity-40 transition-opacity duration-500"
+                          className="absolute w-20 h-20 sm:w-24 sm:h-24 rounded-full blur-xl opacity-20 group-hover:opacity-40 transition-opacity duration-500"
                           style={{ backgroundColor: cat.accentColor }}
                         />
 
@@ -411,33 +411,33 @@ export default function GatewayScreen({ onSelectNiche }) {
                         <img
                           src={cat.image}
                           alt={cat.nameEn}
-                          loading="eager"
+                          loading="lazy"
                           decoding="async"
                           className="w-full h-full object-contain filter drop-shadow-[0_10px_16px_rgba(0,0,0,0.85)] group-hover:scale-108 group-hover:-rotate-2 group-hover:-translate-y-1 transition-all duration-500 ease-out relative z-10"
                         />
 
                         {/* Micro Highlight Pill */}
-                        <div className="absolute bottom-1.5 left-1.5 z-20">
-                          <span className="px-1.5 py-0.5 rounded bg-black/85 backdrop-blur-md text-[8px] sm:text-[9px] font-bold text-slate-200 border border-white/10 shadow-sm truncate max-w-[130px] inline-block">
+                        <div className="absolute bottom-1 sm:bottom-1.5 left-1 sm:left-1.5 z-20">
+                          <span className="px-1.5 py-0.5 rounded bg-black/85 backdrop-blur-md text-[7.5px] sm:text-[9px] font-bold text-slate-200 border border-white/10 shadow-sm truncate max-w-[105px] sm:max-w-[130px] inline-block">
                             {cat.heroHighlight}
                           </span>
                         </div>
                       </div>
 
                       {/* Title & Subtitle */}
-                      <div className="space-y-0.5 my-2.5 sm:my-3">
-                        <h3 className="text-sm sm:text-base lg:text-lg font-black text-white tracking-wide leading-snug group-hover:text-cyan-300 transition-colors">
+                      <div className="space-y-0.5 my-2 sm:my-3 min-w-0">
+                        <h3 className="text-[13px] sm:text-base lg:text-lg font-black text-white tracking-wide leading-snug group-hover:text-cyan-300 transition-colors truncate">
                           {cat.nameBn}
                         </h3>
-                        <p className="text-[10px] sm:text-[11px] text-slate-400 line-clamp-1 font-medium">
+                        <p className="text-[9.5px] sm:text-[11px] text-slate-400 line-clamp-1 font-medium truncate">
                           {cat.nameEn}
                         </p>
                       </div>
 
                       {/* Key Features Chips */}
-                      <div className="space-y-1 mb-3">
+                      <div className="space-y-1 mb-2.5 sm:mb-3">
                         {cat.features.map((feat, i) => (
-                          <div key={i} className="flex items-center gap-1.5 text-[9px] sm:text-[10px] text-slate-300 font-medium truncate">
+                          <div key={i} className="flex items-center gap-1.5 text-[8.5px] sm:text-[10px] text-slate-300 font-medium truncate">
                             <span className="w-1 h-1 rounded-full shrink-0" style={{ backgroundColor: cat.accentColor }} />
                             <span className="truncate">{feat}</span>
                           </div>
@@ -446,23 +446,23 @@ export default function GatewayScreen({ onSelectNiche }) {
                     </div>
 
                     {/* Bottom Action Buttons */}
-                    <div className="space-y-1.5 pt-2 border-t border-slate-800/80 mt-auto">
+                    <div className="space-y-1.5 pt-2 border-t border-slate-800/80 mt-auto min-w-0">
                       <button
                         type="button"
                         onClick={(e) => {
                           e.stopPropagation();
                           onSelectNiche(cat.id);
                         }}
-                        className={`w-full py-2 px-2.5 rounded-xl bg-gradient-to-r ${cat.btnGrad} text-[11px] sm:text-xs shadow-md flex items-center justify-center gap-1.5 transition-transform active:scale-95 cursor-pointer`}
+                        className={`w-full py-2 px-2 rounded-xl bg-gradient-to-r ${cat.btnGrad} text-[10.5px] sm:text-xs shadow-md flex items-center justify-center gap-1 sm:gap-1.5 transition-transform active:scale-95 cursor-pointer truncate`}
                       >
-                        <span>লাইভ স্টোর দেখুন</span>
-                        <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
+                        <span className="truncate">লাইভ স্টোর দেখুন</span>
+                        <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform shrink-0" />
                       </button>
 
                       <a
                         href={cat.adminUrl}
                         onClick={(e) => e.stopPropagation()}
-                        className="w-full py-0.5 text-center block text-[9px] sm:text-[10px] font-mono text-slate-400 hover:text-white transition-colors"
+                        className="w-full py-0.5 text-center block text-[8.5px] sm:text-[10px] font-mono text-slate-400 hover:text-white transition-colors truncate"
                       >
                         ⚡ অ্যাডমিন ড্যাশবোর্ড ➔
                       </a>

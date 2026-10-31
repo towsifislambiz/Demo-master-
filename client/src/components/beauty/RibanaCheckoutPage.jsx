@@ -17,11 +17,16 @@ export default function RibanaCheckoutPage() {
     clearCart, 
     deliveryArea, 
     setDeliveryArea, 
-    placeOrder 
+    placeOrder,
+    getNicheCart,
+    getProductNiche
   } = useStore();
 
+  const rawCart = getNicheCart ? getNicheCart('beauty') : (Array.isArray(cart) ? cart : []);
+  const beautyCart = rawCart.filter((item) => (getProductNiche ? getProductNiche(item) : (item.id || '').startsWith('rb-')) === 'beauty');
+
   // If cart is empty, provide default luxury demo items so page is always rich & interactive
-  const effectiveCart = cart.length > 0 ? cart : [
+  const effectiveCart = beautyCart.length > 0 ? beautyCart : [
     {
       ...RIBANA_PRODUCTS[0],
       quantity: 1,

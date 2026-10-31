@@ -11,7 +11,7 @@ import { GHORER_BAZAR_BRAND, GHORER_BAZAR_PRODUCTS } from '../../data/ghorerBaza
 
 export default function GhorerBazarCheckoutPage() {
   const navigate = useNavigate();
-  const { cart = [], removeFromCart, updateQuantity, clearCart, placeOrder } = useStore();
+  const { cart = [], removeFromCart, updateQuantity, clearCart, placeOrder, getNicheCart, getProductNiche } = useStore();
 
   const [deliveryArea, setDeliveryArea] = useState('inside_dhaka'); // 'inside_dhaka' | 'outside_dhaka'
   const [name, setName] = useState('');
@@ -27,8 +27,11 @@ export default function GhorerBazarCheckoutPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [orderSuccess, setOrderSuccess] = useState(null);
 
+  const rawCart = getNicheCart ? getNicheCart('organic') : cart;
+  const organicCart = rawCart.filter((item) => (getProductNiche ? getProductNiche(item) : (item.id || '').startsWith('gb-')) === 'organic');
+
   // If cart is empty and user visits directly, provide fallback product for seamless demo testing
-  const effectiveCart = cart.length > 0 ? cart : [
+  const effectiveCart = organicCart.length > 0 ? organicCart : [
     {
       id: GHORER_BAZAR_PRODUCTS[0].id,
       title: GHORER_BAZAR_PRODUCTS[0].title,
@@ -683,7 +686,7 @@ export default function GhorerBazarCheckoutPage() {
                             className="w-14 h-14 rounded-xl object-cover border border-stone-200 shrink-0 bg-stone-50"
                             onError={(e) => {
                               e.target.onerror = null;
-                              e.target.src = '/organic-images/Glass_jar_filled_with_honey_a0f0a2a1.jpg';
+                              e.target.src = '/organic-images/Glass_jar_filled_with_honey_a0f0a2a1.webp';
                             }}
                           />
 

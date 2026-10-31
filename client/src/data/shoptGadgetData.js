@@ -1,32 +1,32 @@
 // ShopT Gadget Store Master Dataset
 // Combo 01 — Navy + Silver + White Luxury Tech Styling
 
-import cableOled from '../assets/gadgets/cable_typec_oled_display.jpg';
-import chargerGan from '../assets/gadgets/charger_gan_100w.jpg';
-import chargerMagsafe from '../assets/gadgets/charger_magsafe_3in1_stand.jpg';
-import earbudsGaming from '../assets/gadgets/earbuds_gaming_rgb_lowlatency.jpg';
-import earbudsMatteBlack from '../assets/gadgets/earbuds_matte_black_obsidian.jpg';
-import earbudsTransparent from '../assets/gadgets/earbuds_transparent_anc.jpg';
-import earphonesNeckband from '../assets/gadgets/earphones_neckband_sport.jpg';
-import headphonesOverear from '../assets/gadgets/headphones_overear_anc.jpg';
-import keyboardMechanical from '../assets/gadgets/keyboard_mechanical_rgb.jpg';
-import laptopCarbon from '../assets/gadgets/laptop_carbon_fiber_business.jpg';
-import laptopDualscreen from '../assets/gadgets/laptop_dualscreen_oled.jpg';
-import laptopGaming from '../assets/gadgets/laptop_gaming_rgb.jpg';
-import laptopSpaceblack from '../assets/gadgets/laptop_ultrabook_spaceblack.jpg';
-import mouseGaming from '../assets/gadgets/mouse_gaming_honeycomb.jpg';
-import phoneVeganLeather from '../assets/gadgets/phone_curved_vegan_leather.jpg';
-import phoneGamingRgb from '../assets/gadgets/phone_gaming_rgb_fan.jpg';
-import phoneGlyph from '../assets/gadgets/phone_glyph_transparent.jpg';
-import phoneTitanium from '../assets/gadgets/phone_titanium_flagship.jpg';
-import powerbankCyber from '../assets/gadgets/powerbank_cyber_transparent.jpg';
-import powerbankRugged from '../assets/gadgets/powerbank_rugged_outdoor.jpg';
-import ringCeramic from '../assets/gadgets/smart_health_ring_ceramic.jpg';
-import tabletAndroid from '../assets/gadgets/tablet_android_entertainment.jpg';
-import watchFitness from '../assets/gadgets/watch_fitness_tracker_curved.jpg';
-import watchMilanese from '../assets/gadgets/watch_milanese_executive.jpg';
-import watchTactical from '../assets/gadgets/watch_tactical_gps_military.jpg';
-import watchTitanium from '../assets/gadgets/watch_titanium_rugged_ultra.jpg';
+import cableOled from '../assets/gadgets/cable_typec_oled_display.webp';
+import chargerGan from '../assets/gadgets/charger_gan_100w.webp';
+import chargerMagsafe from '../assets/gadgets/charger_magsafe_3in1_stand.webp';
+import earbudsGaming from '../assets/gadgets/earbuds_gaming_rgb_lowlatency.webp';
+import earbudsMatteBlack from '../assets/gadgets/earbuds_matte_black_obsidian.webp';
+import earbudsTransparent from '../assets/gadgets/earbuds_transparent_anc.webp';
+import earphonesNeckband from '../assets/gadgets/earphones_neckband_sport.webp';
+import headphonesOverear from '../assets/gadgets/headphones_overear_anc.webp';
+import keyboardMechanical from '../assets/gadgets/keyboard_mechanical_rgb.webp';
+import laptopCarbon from '../assets/gadgets/laptop_carbon_fiber_business.webp';
+import laptopDualscreen from '../assets/gadgets/laptop_dualscreen_oled.webp';
+import laptopGaming from '../assets/gadgets/laptop_gaming_rgb.webp';
+import laptopSpaceblack from '../assets/gadgets/laptop_ultrabook_spaceblack.webp';
+import mouseGaming from '../assets/gadgets/mouse_gaming_honeycomb.webp';
+import phoneVeganLeather from '../assets/gadgets/phone_curved_vegan_leather.webp';
+import phoneGamingRgb from '../assets/gadgets/phone_gaming_rgb_fan.webp';
+import phoneGlyph from '../assets/gadgets/phone_glyph_transparent.webp';
+import phoneTitanium from '../assets/gadgets/phone_titanium_flagship.webp';
+import powerbankCyber from '../assets/gadgets/powerbank_cyber_transparent.webp';
+import powerbankRugged from '../assets/gadgets/powerbank_rugged_outdoor.webp';
+import ringCeramic from '../assets/gadgets/smart_health_ring_ceramic.webp';
+import tabletAndroid from '../assets/gadgets/tablet_android_entertainment.webp';
+import watchFitness from '../assets/gadgets/watch_fitness_tracker_curved.webp';
+import watchMilanese from '../assets/gadgets/watch_milanese_executive.webp';
+import watchTactical from '../assets/gadgets/watch_tactical_gps_military.webp';
+import watchTitanium from '../assets/gadgets/watch_titanium_rugged_ultra.webp';
 
 export const SHOPT_NAVY_THEME = {
   navyDark: '#0A192F',      // Deep Luxury Midnight Navy

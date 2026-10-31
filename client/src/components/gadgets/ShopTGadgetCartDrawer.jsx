@@ -6,11 +6,11 @@ import {
   ShieldCheck, Tag, Zap, Gift, Truck, Check, Sparkles,
   Phone, MapPin, ChevronRight
 } from 'lucide-react';
-import cableOled from '../../assets/gadgets/cable_typec_oled_display.jpg';
-import chargerGan from '../../assets/gadgets/charger_gan_100w.jpg';
+import cableOled from '../../assets/gadgets/cable_typec_oled_display.webp';
+import chargerGan from '../../assets/gadgets/charger_gan_100w.webp';
 
 export default function ShopTGadgetCartDrawer({ isOpen, onClose }) {
-  const { cart, updateQuantity, removeFromCart, clearCart, addToCart } = useStore();
+  const { cart, updateQuantity, removeFromCart, clearCart, addToCart, getNicheCart, getProductNiche } = useStore();
   const [couponCode, setCouponCode] = useState('');
   const [discount, setDiscount] = useState(0);
   const [couponMsg, setCouponMsg] = useState('');
@@ -21,7 +21,8 @@ export default function ShopTGadgetCartDrawer({ isOpen, onClose }) {
 
   if (!isOpen) return null;
 
-  const cartItems = Array.isArray(cart) ? cart : [];
+  const rawCart = getNicheCart ? getNicheCart('gadgets') : (Array.isArray(cart) ? cart : []);
+  const cartItems = rawCart.filter((item) => (getProductNiche ? getProductNiche(item) : (item.id || '').startsWith('shopt-') || (item.id || '').startsWith('addon-')) === 'gadgets');
   const subtotal = cartItems.reduce((sum, item) => sum + ((item.price || 0) * (item.quantity || 1)), 0);
   
   // Gamified Milestones: 2,000 for free shipping, 5,000 for free 100W cable
@@ -84,21 +85,21 @@ export default function ShopTGadgetCartDrawer({ isOpen, onClose }) {
         onClick={onClose}
       />
 
-      <div className="fixed inset-y-0 right-0 max-w-full flex pl-6 sm:pl-10">
-        <div className="w-screen max-w-md bg-gradient-to-b from-[#080E1C] via-[#0C152B] to-[#060A14] text-white flex flex-col shadow-2xl border-l border-cyan-500/30">
+      <div className="fixed inset-y-0 right-0 max-w-full flex">
+        <div className="w-full sm:w-[420px] max-w-full bg-gradient-to-b from-[#080E1C] via-[#0C152B] to-[#060A14] text-white flex flex-col shadow-2xl border-l border-cyan-500/30">
           
           {/* 1. Header with Tech Telemetry */}
-          <div className="p-4 bg-[#060B17]/95 border-b border-slate-800 flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-cyan-500/20 to-blue-600/30 border border-cyan-400/40 flex items-center justify-center text-cyan-400 shadow-inner">
+          <div className="p-3.5 sm:p-4 bg-[#060B17]/95 border-b border-slate-800 flex items-center justify-between gap-2">
+            <div className="flex items-center gap-2.5 sm:gap-3 min-w-0">
+              <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-gradient-to-tr from-cyan-500/20 to-blue-600/30 border border-cyan-400/40 flex items-center justify-center text-cyan-400 shadow-inner shrink-0">
                 <ShoppingBag className="w-4 h-4" />
               </div>
-              <div>
-                <h2 className="text-sm font-black text-white flex items-center gap-1.5">
+              <div className="min-w-0">
+                <h2 className="text-sm font-black text-white flex items-center gap-1.5 truncate">
                   <span>স্প্যাশিয়াল কার্ট ডেক</span>
-                  <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                  <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse shrink-0" />
                 </h2>
-                <p className="text-[11px] text-slate-400 font-medium">
+                <p className="text-[10.5px] sm:text-[11px] text-slate-400 font-medium truncate">
                   {cartItems.length} টি গ্যাজেট আইটেম সংরক্ষিত
                 </p>
               </div>

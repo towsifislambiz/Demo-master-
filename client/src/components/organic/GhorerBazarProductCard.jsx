@@ -86,7 +86,7 @@ export default function GhorerBazarProductCard({
           className="absolute inset-0 w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500"
           onError={(e) => {
             e.target.onerror = null;
-            e.target.src = '/organic-images/Glass_jar_filled_with_honey_a0f0a2a1.jpg';
+            e.target.src = '/organic-images/Glass_jar_filled_with_honey_a0f0a2a1.webp';
           }}
         />
       </Link>

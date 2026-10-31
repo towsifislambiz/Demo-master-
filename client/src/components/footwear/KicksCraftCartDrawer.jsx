@@ -9,7 +9,7 @@ import { FOOTWEAR_BRAND } from '../../data/footwearData';
 
 export default function KicksCraftCartDrawer({ isOpen, onClose }) {
   const navigate = useNavigate();
-  const { cart = [], removeFromCart, updateQuantity, clearCart } = useStore();
+  const { cart = [], removeFromCart, updateQuantity, clearCart, getNicheCart, getProductNiche } = useStore();
   
   const [couponCode, setCouponCode] = useState('');
   const [discountAmount, setDiscountAmount] = useState(0);
@@ -17,7 +17,10 @@ export default function KicksCraftCartDrawer({ isOpen, onClose }) {
 
   if (!isOpen) return null;
 
-  const subtotal = cart.reduce((sum, item) => sum + ((item.price || 0) * (item.quantity || 1)), 0);
+  const rawCart = getNicheCart ? getNicheCart('footwear') : cart;
+  const footwearCart = (Array.isArray(rawCart) ? rawCart : []).filter((item) => (getProductNiche ? getProductNiche(item) : (item.id || '').startsWith('kc-')) === 'footwear');
+
+  const subtotal = footwearCart.reduce((sum, item) => sum + ((item.price || 0) * (item.quantity || 1)), 0);
   const freeThreshold = FOOTWEAR_BRAND.freeDeliveryThreshold;
   const isFreeDelivery = subtotal >= freeThreshold;
   const neededForFree = Math.max(0, freeThreshold - subtotal);
@@ -49,19 +52,19 @@ export default function KicksCraftCartDrawer({ isOpen, onClose }) {
         onClick={onClose}
       />
 
-      <div className="fixed inset-y-0 right-0 max-w-full flex pl-10">
-        <div className="w-screen max-w-md bg-white shadow-2xl flex flex-col justify-between border-l border-slate-200">
+      <div className="fixed inset-y-0 right-0 max-w-full flex">
+        <div className="w-full sm:w-[420px] max-w-full bg-white shadow-2xl flex flex-col justify-between border-l border-slate-200">
           
           {/* Header */}
-          <div className="p-4 sm:p-5 border-b border-slate-100 flex items-center justify-between bg-[#0B0F17] text-white">
-            <div className="flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-xl bg-[#FF4800] flex items-center justify-center text-white shadow-sm">
+          <div className="p-3.5 sm:p-5 border-b border-slate-100 flex items-center justify-between gap-2 bg-[#0B0F17] text-white">
+            <div className="flex items-center gap-2.5 min-w-0">
+              <div className="w-8 h-8 rounded-xl bg-[#FF4800] flex items-center justify-center text-white shadow-sm shrink-0">
                 <ShoppingBag className="w-4 h-4" />
               </div>
-              <div>
-                <h3 className="font-black text-base leading-none">আপনার শপিং ব্যাগ</h3>
-                <span className="text-[11px] text-orange-400 font-bold">
-                  {cart.length} জোড়া আইটেম যুক্ত রয়েছে
+              <div className="min-w-0">
+                <h3 className="font-black text-sm sm:text-base leading-none truncate">আপনার শপিং ব্যাগ</h3>
+                <span className="text-[10px] sm:text-[11px] text-orange-400 font-bold truncate block mt-0.5">
+                  {footwearCart.length} জোড়া আইটেম যুক্ত রয়েছে
                 </span>
               </div>
             </div>
@@ -100,7 +103,7 @@ export default function KicksCraftCartDrawer({ isOpen, onClose }) {
 
           {/* Cart Items List */}
           <div className="flex-1 overflow-y-auto p-4 sm:p-5 divide-y divide-slate-100 space-y-3">
-            {cart.length === 0 ? (
+            {footwearCart.length === 0 ? (
               <div className="h-full flex flex-col items-center justify-center text-center py-16">
                 <div className="w-16 h-16 rounded-full bg-slate-100 flex items-center justify-center text-slate-400 mb-4">
                   <ShoppingBag className="w-8 h-8" />
@@ -121,7 +124,7 @@ export default function KicksCraftCartDrawer({ isOpen, onClose }) {
                 </button>
               </div>
             ) : (
-              cart.map((item) => (
+              footwearCart.map((item) => (
                 <div key={item.id} className="pt-3 first:pt-0 flex gap-3 sm:gap-4 items-center">
                   {/* Sneaker Thumbnail */}
                   <div className="w-20 h-20 rounded-xl bg-slate-100 p-1.5 shrink-0 overflow-hidden border border-slate-200 flex items-center justify-center">
@@ -194,7 +197,7 @@ export default function KicksCraftCartDrawer({ isOpen, onClose }) {
           </div>
 
           {/* Footer Area with Promo & Checkout */}
-          {cart.length > 0 && (
+          {footwearCart.length > 0 && (
             <div className="p-4 sm:p-5 border-t border-slate-200 bg-slate-50/70 space-y-3">
               
               {/* Coupon Row */}

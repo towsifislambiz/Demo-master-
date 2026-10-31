@@ -16,13 +16,18 @@ export default function GhorerBazarHeader({
   onOpenCart,
   onBackToGateway
 }) {
-  const { cart, wishlist = [] } = useStore();
+  const { cart, wishlist = [], getNicheCart, getNicheWishlist, getProductNiche } = useStore();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const navigate = useNavigate();
 
-  const totalCartCount = Array.isArray(cart) ? cart.reduce((sum, item) => sum + (item.quantity || 1), 0) : 0;
-  const totalCartPrice = Array.isArray(cart) ? cart.reduce((sum, item) => sum + ((item.price || 0) * (item.quantity || 1)), 0) : 0;
-  const wishlistCount = Array.isArray(wishlist) ? wishlist.length : 0;
+  const organicItems = (getNicheCart ? getNicheCart('organic') : (Array.isArray(cart) ? cart : []))
+    .filter((item) => (getProductNiche ? getProductNiche(item) : (item.id || '').startsWith('gb-')) === 'organic');
+  const organicWishlist = (getNicheWishlist ? getNicheWishlist('organic') : (Array.isArray(wishlist) ? wishlist : []))
+    .filter((item) => (getProductNiche ? getProductNiche(item) : (item.id || '').startsWith('gb-')) === 'organic');
+
+  const totalCartCount = organicItems.reduce((sum, item) => sum + (item.quantity || 1), 0);
+  const totalCartPrice = organicItems.reduce((sum, item) => sum + ((item.price || 0) * (item.quantity || 1)), 0);
+  const wishlistCount = organicWishlist.length;
 
   const handleBack = onBackToGateway || (() => navigate('/'));
 

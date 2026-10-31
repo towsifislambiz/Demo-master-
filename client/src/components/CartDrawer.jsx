@@ -78,13 +78,13 @@ export default function CartDrawer() {
           />
 
           {/* Slide Drawer */}
-          <div className="fixed inset-y-0 right-0 max-w-full flex pl-10">
+          <div className="fixed inset-y-0 right-0 max-w-full flex">
             <motion.div
               initial={{ x: '100%' }}
               animate={{ x: 0 }}
               exit={{ x: '100%' }}
               transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-              className="w-screen max-w-md bg-slate-900 border-l border-slate-800 text-slate-100 flex flex-col justify-between shadow-2xl"
+              className="w-full sm:w-[420px] max-w-full bg-slate-900 border-l border-slate-800 text-slate-100 flex flex-col justify-between shadow-2xl"
             >
               
               {/* Header */}
